@@ -11,11 +11,15 @@ struct ContentView: View {
     let predators = Predators()
     @State var searchText = ""
     @State var alphabetical = false
+    @State var currentSelection = APType.all
     
     var filteredDinos: [ApexPredator]{
+        predators.filter(by: currentSelection)
         predators.sort(by: alphabetical)
         return predators.search(for: searchText)
     }
+    
+    
     
     var body: some View {
         NavigationStack{
@@ -23,7 +27,7 @@ struct ContentView: View {
                 NavigationLink{
                     Text(predator.name)
                 }label: {
-                   HStack {
+                    HStack {
                         Image(predator.image)
                             .resizable()
                             .scaledToFit()
@@ -46,7 +50,6 @@ struct ContentView: View {
                         }
                     }
                 }
-                
             }
             .navigationTitle("Apex predators")
             .searchable(text: $searchText)
@@ -55,15 +58,25 @@ struct ContentView: View {
             .toolbar{
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        alphabetical.toggle()
-                        
-                    } label: {
-                        if alphabetical {
-                            Image(systemName: "film")
-                        } else {
-                            Image(systemName: "textformat")
+                        withAnimation{
+                            alphabetical.toggle()
                         }
-                        
+                    } label: {
+                        Image(systemName: alphabetical ? "film" : "textformat")
+                            .symbolEffect(.bounce, value: alphabetical)
+
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing){
+                    
+                    Menu{
+                        Picker("Filter", selection: $currentSelection.animation()){
+                            ForEach(APType.allCases){ type in
+                                Label(type.rawValue.capitalized, systemImage: type.icon)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
                     }
                 }
             }
