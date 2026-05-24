@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 
-struct ApexPredator: Decodable , Identifiable{
+struct ApexPredator: Decodable , Identifiable {
     let id: Int
     let name: String
     let type: APType
