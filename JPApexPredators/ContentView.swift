@@ -19,13 +19,11 @@ struct ContentView: View {
         return predators.search(for: searchText)
     }
     
-    
-    
     var body: some View {
         NavigationStack{
             List(filteredDinos){ predator in
                 NavigationLink{
-                    Text(predator.name)
+                    PredatorDetail(predator: predator)
                 }label: {
                     HStack {
                         Image(predator.image)
